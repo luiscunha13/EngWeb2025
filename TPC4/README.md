@@ -22,6 +22,6 @@ Inicialmente foi também criado um formatador em python que modificava o ficheir
 
 Formatar ficheiro JSON: `python3 format.py`
 
-Gerar API json-server: `json-server --watch alunos.json`
+Gerar API json-server: `json-server --watch cinemaFormat.json`
 
 Executar servidor: `npm start`
