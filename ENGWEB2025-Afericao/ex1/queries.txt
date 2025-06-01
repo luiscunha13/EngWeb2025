@@ -1,6 +1,6 @@
 1. Quantos livros têm a palavra Love no título;
 
-db.livros.countDocuments({
+db.livros1.countDocuments({
   title: { 
     $regex: /Love/i  
   }
@@ -13,6 +13,11 @@ db.livros.find(
   { title: 1, _id: 0 }
 ).sort({ title: 1 })
 
+db.livros1.find(
+  { "author": { $regex: /Austen/i } },
+  { "title": 1, "_id": 0 }
+).sort({ "title": 1 })
+
 3. Qual a lista de autores (ordenada alfabeticamente e sem repetições)?
 
 db.livros.aggregate([
@@ -24,6 +29,13 @@ db.livros.aggregate([
       author: "$_id"                
   }}
 ]);
+
+db.livros1.aggregate([
+  { $unwind: "$author" },
+  { $group: { _id: "$author" } },
+  { $sort: { "_id": 1 } },
+  { $project: { "author": "$_id", "_id": 0 } }
+])
 
 4. Qual a distribuição de livros por género (genre) (quantos livros tem cada género)?
 
