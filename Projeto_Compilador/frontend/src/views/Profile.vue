@@ -242,7 +242,6 @@ const canEditPost = (publication) => {
          publication.user === currentUser.value.username;
 };
 
-
 const formatDate = (dateString) => {
   if (!dateString) return '';
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -456,6 +455,13 @@ const exportPublications = async () => {
     );
     
     saveAs(content, `${profileUser.value.username}-posts-archive.zip`);
+    const log = {
+      action: `Exported publications from user @${profileUser.value.username}`,
+      user: authStore.user.username,
+      timestamp: (() => {const now = new Date(); now.setHours(now.getHours() + 1); return now;})()
+    }
+    console.log(log)
+    await logsStore.addLog(log);
     loading.value = null;
   } catch (err) {
     console.error('Error creating posts archive:', err);
@@ -501,6 +507,13 @@ const exportSinglePost = async (publication) => {
     // Generate the zip file
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, `${profileUser.value.username}-post-${publication.id}.zip`);
+    const log = {
+      action: `Exported publication (id: ${publication.id} - title: ${publication.title})`,
+      user: authStore.user.username,
+      timestamp: (() => {const now = new Date(); now.setHours(now.getHours() + 1); return now;})()
+    }
+    console.log(log)
+    await logsStore.addLog(log);
   } catch (err) {
     console.error('Error creating zip file:', err);
     // Fallback to JSON-only export if zip fails
@@ -515,6 +528,7 @@ const exportSinglePost = async (publication) => {
     a.download = `${profileUser.value.username}-post-${publication.id}.json`;
     a.click();
     URL.revokeObjectURL(url);
+
   }
 };
 
